@@ -28,6 +28,8 @@ typedef struct {
 } Mat4;
 
 
+
+
 static inline Vec3 vec3_sub(Vec3 a, Vec3 b) {
     Vec3 res = {a.x - b.x, a.y - b.y, a.z - b.z};
     return res;
@@ -112,3 +114,50 @@ static inline Vec4 mat4_mul_vec4(const Mat4* m, Vec4 v) {
 
 }
 
+
+
+
+EXPORT void mat4_translation(float tx, float ty, float tz, Mat4* out) {
+    mat4_identity(out);
+    out->m[3] = tx;
+    out->m[7] = ty;
+    out->m[11] = tz;
+}
+
+EXPORT void mat4_scale(float sx, float sy, float sz, Mat4* out) {
+    memset(out->m, 0, 16*sizeof(float));
+    out->m[0] = sx;
+    out->m[5] = sy;
+    out->m[10] = sz;
+    out->m[15] = 1.0f;
+}
+
+EXPORT void mat4_rotation_x(float angle_rad, Mat4* out) {
+    mat4_identity(out);
+    float c = cosf(angle_rad);
+    float s = sinf(angle_rad);
+    out->m[5] = c;
+    out->m[6] = -s;
+    out->m[9] = s;
+    out->m[10] = c;
+}
+
+EXPORT void mat4_rotation_y(float angle_rad, Mat4* out) {
+    mat4_identity(out);
+    float c = cosf(angle_rad);
+    float s = sinf(angle_rad);
+    out->m[0] = c;
+    out->m[2] = s;
+    out->m[8] = -s;
+    out->m[10] = c;
+}
+
+EXPORT void mat4_rotation_z(float angle_rad, Mat4* out) {
+    mat4_identity(out);
+    float c = cosf(angle_rad);
+    float s = sinf(angle_rad);
+    out->m[0] = c;
+    out->m[1] = -s;
+    out->m[4] = s;
+    out->m[5] = c;
+}
