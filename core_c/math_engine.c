@@ -165,7 +165,7 @@ EXPORT void mat4_rotation_z(float angle_rad, Mat4* out) {
 
 
 
-EXPORT mat4_look_at(Vec3 eye, Vec3 target, Vec3 up, Mat4* out) {
+EXPORT void mat4_look_at(Vec3 eye, Vec3 target, Vec3 up, Mat4* out) {
     Vec3 f = vec3_normalize(vec3_sub(eye, target));
     Vec3 r = vec3_normalize(vec3_cross(up, f));
     Vec3 u = vec3_cross(f, r);
@@ -176,3 +176,15 @@ EXPORT mat4_look_at(Vec3 eye, Vec3 target, Vec3 up, Mat4* out) {
     out->m[8] = f.x; out->m[9] = f.y; out->m[10] = f.z; out->m[11] = -vec3_dot(f, eye);
 }
 
+EXPORT void mat4_perspective(float fov_deg, float aspect, float z_near, float z_far, Mat4* out) {
+    memset(out->m, 0, 16*sizeof(float));
+    float fov_rad = fov_deg*((float)M_PI/180.0f);
+    float f = 1.0f/tanf(fov_rad*0.5f);
+    float nf = 1.0f/(z_near-z_far);
+
+    out->m[0] = f/aspect;
+    out->m[5] = f;
+    out->m[10] = (z_far + z_near)*nf;
+    out->m[11] = (2.0f*z_far*z_near)*nf;
+    out->m[14] = -1.0f;
+}
