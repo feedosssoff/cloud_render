@@ -166,12 +166,13 @@ EXPORT void mat4_rotation_z(float angle_rad, Mat4* out) {
 
 
 EXPORT mat4_look_at(Vec3 eye, Vec3 target, Vec3 up, Mat4* out) {
-    Vec3 f = vec3_normalize(vec3_sub(target, eye));
-    Vec3 r = vec3_normalize(vec3_cross(f, up));
+    Vec3 f = vec3_normalize(vec3_sub(eye, target));
+    Vec3 r = vec3_normalize(vec3_cross(up, f));
     Vec3 u = vec3_cross(f, r);
 
     mat4_identity(out);
     out->m[0] = r.x; out->m[1] = r.y; out->m[2] = r.z; out->m[3] = -vec3_dot(r, eye);
     out->m[4] = u.x; out->m[5] = u.y; out->m[6] = u.z; out->m[7] = -vec3_dot(u, eye);
-    out->m[8] = -f.x; out->m[9] = -f.y; out->m[10] = -f.z; out->m[11] = vec3_dot(f, eye);
+    out->m[8] = f.x; out->m[9] = f.y; out->m[10] = f.z; out->m[11] = -vec3_dot(f, eye);
 }
+
